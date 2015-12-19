@@ -17,5 +17,10 @@ if (php_sapi_name() === 'cli-server') {
 // Setup autoloading
 require 'init_autoloader.php';
 
+// Kint for debug
+if($_SERVER['APPLICATION_ENV'] == 'development') {
+    require 'vendor/kint/Kint.class.php';
+}
+
 // Run the application!
 Zend\Mvc\Application::init(require 'config/application.config.php')->run();

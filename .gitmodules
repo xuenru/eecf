@@ -1,0 +1,3 @@
+[submodule "vendor/kint"]
+	path = vendor/kint
+	url = https://github.com/raveren/kint.git
