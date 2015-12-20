@@ -5,11 +5,19 @@
  * @see http://framework.zend.com/manual/current/en/tutorials/config.advanced.html#environment-specific-system-configuration
  * @see http://framework.zend.com/manual/current/en/tutorials/config.advanced.html#environment-specific-application-configuration
  */
+$env = getenv('APPLICATION_ENV') ?: 'production';
+
+// Use the $env value to determine which modules to load
+$modules = array(
+    'Application',
+);
+if ($env == 'development') {
+    $modules[] = 'ZendDeveloperTools';
+}
+
 return array(
     // This should be an array of module namespaces used in the application.
-    'modules' => array(
-        'Application',
-    ),
+    'modules' => $modules,
 
     // These are various options for the listeners attached to the ModuleManager
     'module_listener_options' => array(
@@ -64,7 +72,7 @@ return array(
     //     ),
     // ),
 
-   // Initial configuration with which to seed the ServiceManager.
-   // Should be compatible with Zend\ServiceManager\Config.
-   // 'service_manager' => array(),
+    // Initial configuration with which to seed the ServiceManager.
+    // Should be compatible with Zend\ServiceManager\Config.
+    // 'service_manager' => array(),
 );
