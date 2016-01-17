@@ -56,7 +56,7 @@ class SendAnnonceMail implements ListenerAggregateInterface
         /** @var AnnonceService $annonceService */
         $annonceService = $serviceLocator->get('Annonce\Service\AnnonceService');
         $annonceName = $annonceService->getAnnonce($annonceId)->getWorshipDate();
-        $annonceComment = 'Comment: '.$e->getParam('annonceHistortyComment');
+        $annonceComment = 'Comment: ' . $e->getParam('annonceHistortyComment');
         $updateAuthor = $e->getParam('updateAuthor');
         $annonceUrl = $baseUrl . $target->url()->fromRoute('annonce/edit', array('id' => $annonceId));
 
@@ -70,7 +70,9 @@ class SendAnnonceMail implements ListenerAggregateInterface
             ";
 
         $message = new Message();
-        $message->addFrom('xuenru@hotmail.com', 'EECF Annonce Notice')
+        $config = $serviceLocator->get('Config');
+        $fromEmail = $config['mail']['transport']['options']['connection_config']['username'];
+        $message->addFrom($fromEmail, 'EECF Annonce Notice')
             ->addTo($toMailList)
             ->setSubject($subject)
             ->setBody($msgBody);

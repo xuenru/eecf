@@ -6,7 +6,7 @@
  * @see http://framework.zend.com/manual/current/en/tutorials/config.advanced.html#environment-specific-system-configuration
  * @see http://framework.zend.com/manual/current/en/tutorials/config.advanced.html#environment-specific-application-configuration
  */
-$env = getenv('APPLICATION_ENV') ? 'development' : 'production';
+$env = getenv('APPLICATION_ENV') ?: 'production';
 
 // Use the $env value to determine which modules to load
 $modules = array(
