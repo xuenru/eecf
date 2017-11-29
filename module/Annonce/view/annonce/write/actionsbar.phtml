@@ -1,0 +1,92 @@
+<?php
+$userSessionContainer = new \Zend\Session\Container('user');
+$userObj = $userSessionContainer->offsetGet('obj');
+if ($userObj instanceof \Annonce\Model\User\User) :
+    $roleId = $userObj->getRoleId();
+    ?>
+    <?php if (\Annonce\Permission\User::canEdit($roleId, $annonceStatus)): ?>
+    <li>
+        <button class="btn btn-info btn-st" data-toggle="modal" data-target="#modalUpdateStatus"
+                value="<?php echo $annonceId . '|' . \Annonce\Model\Status::STATUS_PENDING ?>">
+            Pending
+        </button>
+    </li>
+<?php endif; ?>
+    <?php if (\Annonce\Permission\User::canValidate($roleId, $annonceStatus)): ?>
+    <li>
+        <button class="btn btn-success btn-st" data-toggle="modal" data-target="#modalUpdateStatus"
+                value="<?php echo $annonceId . '|' . \Annonce\Model\Status::STATUS_OK ?>">
+            OK
+        </button>
+    </li>
+    <li>
+        <button class="btn btn-warning btn-st" data-toggle="modal" data-target="#modalUpdateStatus"
+                value="<?php echo $annonceId . '|' . \Annonce\Model\Status::STATUS_KO ?>">
+            KO
+        </button>
+    </li>
+<?php endif; ?>
+    <?php if (\Annonce\Permission\User::canClose($roleId, $annonceStatus)): ?>
+    <li>
+        <button class="btn btn-default btn-st" data-toggle="modal" data-target="#modalUpdateStatus"
+                value="<?php echo $annonceId . '|' . \Annonce\Model\Status::STATUS_CLOSED ?>">
+            Closed
+        </button>
+    </li>
+<?php endif; ?>
+    <?php if (\Annonce\Permission\User::canDelete($roleId, $annonceStatus)): ?>
+    <li>
+        <a class="btn btn-danger"
+           href="<?php echo $this->url('annonce/delete', array('id' => $annonceId)); ?>">Delete</a>
+    </li>
+<?php endif; ?>
+
+<?php endif; ?>
+
+<!-- Modal -->
+<div class="modal fade" id="modalUpdateStatus" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    Update annonce status
+                </h4>
+            </div>
+
+            <form role="form" method="post" action="<?php echo $this->url('annonce/update-status') ?>">
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <input type="hidden" id="annonce_id_status" name="annonce_id_status">
+                    <div class="form-group">
+                        <label for="comment">Comment</label>
+                        <textarea class="form-control" id="comment" name="comment" placeholder="leave a comment"
+                                  rows="5"></textarea>
+                    </div>
+
+                </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).on("click", ".btn-st", function () {
+        $("#annonce_id_status").val($(this).val());
+    });
+</script>

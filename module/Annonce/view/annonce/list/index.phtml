@@ -1,0 +1,60 @@
+<?php
+$userSessionContainer = new \Zend\Session\Container('user');
+$userObj = $userSessionContainer->offsetGet('obj');
+$roleId = $userObj->getRoleId();
+
+$title = 'Annonces';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<?php if ($userObj instanceof \Annonce\Model\User\User && \Annonce\Permission\User::canAdd($roleId)) : ?>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-10">
+            <a class="btn btn-primary btn-lg" href="<?php echo $this->url('annonce/edit'); ?>">Add new annonce</a>
+        </div>
+    </div>
+<?php endif; ?>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-2">Worship date</th>
+        <th class="col-md-2">Status</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($annonces as $annonce) : ?>
+        <tr>
+            <td><a href="<?php echo $this->url(
+                    'annonce/edit', array('id' => $annonce->getId())
+                ); ?>"><?php echo $this->escapeHtml($annonce->getWorshipDate()); ?></a></td>
+            <td><p class="<?php echo $annonce->findTextBgColorClass(); ?>"><?php echo $this->escapeHtml(
+                        $annonce->getStatusLabel()
+                    ); ?> </p>
+            </td>
+            <td>
+                <ul class="list-inline" style="border-bottom: none;">
+                    <li>
+                        <a class="btn btn-primary"
+                           href="<?php echo $this->url('annonce/edit', array('id' => $annonce->getId())); ?>">
+                            <?php echo(\Annonce\Permission\User::canEdit($roleId, $annonce->getStatus())
+                                ? 'Edit'
+                                : 'Detail') ?>
+                        </a>
+                    </li>
+                    <?php echo $this->partial(
+                        'annonce/write/actionsbar.phtml',
+                        array('annonceId' => $annonce->getId(), 'annonceStatus' => $annonce->getStatus())
+                    ); ?>
+                </ul>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+
+</table>
+<?php
+//$date = '12/01/2016';
+//$date = '2016-01-12';
+//
+//ddd(preg_match('/^(\d{4})-(\d{2})-(\d{2})$/',$date, $matches), $matches);

@@ -1,0 +1,85 @@
+<?php
+$this->headLink()->appendStylesheet($this->basePath('jquery/jquery-ui.min.css'));
+$this->headScript()->appendFile($this->basePath('jquery/jquery-ui.min.js'));
+$this->headScript()->appendFile($this->basePath('js/annonce/datepicker.js'));
+
+$title = 'Edit Annonce';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<a href="<?php echo $this->url('annonce'); ?>">Return to list</a>
+
+
+<?php
+if ($canEdit):
+    $form->setAttribute('action', $this->url('annonce/edit', array(), true));
+    echo $this->bs3form($form);
+else:
+    ?>
+    <?php foreach ($form as $element) :
+    if ($element instanceof \Zend\Form\Element\Hidden || $element instanceof \Zend\Form\Element\Submit) {
+        continue;
+    }
+    ?>
+    <div class="row">
+        <label class="col-sm-2 text-right">
+            <?php echo $element->getLabel() ?>
+        </label>
+        <div class="col-sm-10">
+            <?php echo str_replace("\n", "<br>", $element->getValue()) ?>
+        </div>
+    </div>
+    <?php
+endforeach;
+endif;
+?>
+
+<hr>
+<div class="row">
+    <label class="col-sm-2 text-right">
+        Current status
+    </label>
+    <div class="col-sm-10">
+        <p class="<?php echo $textColorClass; ?>"><?php echo $status; ?></p>
+    </div>
+</div>
+
+<div class="row">
+    <label class="col-sm-2 text-right">
+        Change status
+    </label>
+    <div class="col-sm-10">
+        <ul class="list-inline">
+            <?php echo $this->partial(
+                'annonce/write/actionsbar.phtml', array('annonceId' => $annonceId, 'annonceStatus' => $statusId)
+            ); ?>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-2">
+        <table class="table table-striped">
+            <caption class="text-left">History</caption>
+            <thead>
+            <tr>
+                <th class="col-md-2">Change status</th>
+                <th class="col-md-2">Name</th>
+                <th>Comment</th>
+                <th class="col-md-2">Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($annonceHistories as $annonceHistory): ?>
+                <tr>
+                    <th><?php echo $annonceHistory->getStatusToLabel(); ?></th>
+                    <td><?php echo $annonceHistory->getAuthorLastname() . ' ' . $annonceHistory->getAuthorFirstname(
+                            ); ?></td>
+                    <td><?php echo $annonceHistory->getComment(); ?></td>
+                    <td><?php echo $annonceHistory->getUpdateAt(); ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>

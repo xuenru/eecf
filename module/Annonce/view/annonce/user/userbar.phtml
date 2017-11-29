@@ -1,0 +1,18 @@
+<?php
+$userSessionContainer = new \Zend\Session\Container('user');
+$userObj = $userSessionContainer->offsetGet('obj');
+if ($userObj instanceof \Annonce\Model\User\User) :
+    ?>
+    <li>
+        <a href="<?php echo $this->url('annonce-user/info') ?>">
+            <?php echo $userObj->getLastname() . ' ' . $userObj->getFirstname() ?>
+        </a>
+    </li>
+    <li>
+        <a href="<?php echo $this->url('annonce-user/logout') ?>">logout</a>
+    </li>
+<?php else : ?>
+    <li>
+        <a href="<?php echo $this->url('annonce-user/login') ?>">login</a>
+    </li>
+<?php endif; ?>
