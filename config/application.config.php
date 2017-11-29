@@ -14,9 +14,9 @@ $modules = array(
     'Annonce',
     'XBootstrap3'
 );
-if ($env == 'development') {
-    $modules[] = 'ZendDeveloperTools';
-}
+//if ($env == 'development') {
+//    $modules[] = 'ZendDeveloperTools';
+//}
 
 return array(
     // This should be an array of module namespaces used in the application.
